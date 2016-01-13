@@ -10,19 +10,21 @@ package iloveyouboss;
 
 import java.util.*;
 
-public class ScoreCollection {
-    private List<Scoreable> scores = new ArrayList<>();
+public class ProfilePool {
+    private List<Profile> profiles = new ArrayList<Profile>();
 
-    public void add(Scoreable scoreable) {
-        if (scoreable == null) throw new IllegalArgumentException();
-        scores.add(scoreable);
+    public void add(Profile profile) {
+        profiles.add(profile);
     }
 
-    public int arithmeticMean() {
-        if (scores.size() == 0) return 0;
-        // ...
+    public void score(Criteria criteria) {
+        for (Profile profile : profiles)
+            profile.matches(criteria);
+    }
 
-        int total = scores.stream().mapToInt(Scoreable::getScore).sum();
-        return total / scores.size();
+    public List<Profile> ranked() {
+        Collections.sort(profiles,
+                (p1, p2) -> ((Integer) p2.score()).compareTo(p1.score()));
+        return profiles;
     }
 }

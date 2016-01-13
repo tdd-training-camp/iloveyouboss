@@ -9,10 +9,14 @@
 package iloveyouboss;
 
 import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class Profile {
 
     private Map<String, Answer> answers = new HashMap<>();
+    // ...
+
     private int score;
     private String name;
 
@@ -39,7 +43,6 @@ public class Profile {
             boolean match =
                     criterion.getWeight() == Weight.DontCare ||
                             answer.match(criterion.getAnswer());
-
             if (!match && criterion.getWeight() == Weight.MustMatch) {
                 kill = true;
             }
@@ -47,6 +50,7 @@ public class Profile {
                 score += criterion.getWeight().getValue();
             }
             anyMatches |= match;
+            // ...
         }
         if (kill)
             return false;
@@ -55,5 +59,24 @@ public class Profile {
 
     public int score() {
         return score;
+    }
+
+    public List<Answer> classicFind(Predicate<Answer> pred) {
+        List<Answer> results = new ArrayList<Answer>();
+        for (Answer answer : answers.values())
+            if (pred.test(answer))
+                results.add(answer);
+        return results;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public List<Answer> find(Predicate<Answer> pred) {
+        return answers.values().stream()
+                .filter(pred)
+                .collect(Collectors.toList());
     }
 }
